@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup - Bookhive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .form-toggle {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6c757d;
+        }
+
+        .toggle-btn.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .forms-container {
+            position: relative;
+            height: 550px;
+            overflow: hidden;
+        }
+
+        .form {
+            position: absolute;
+            width: 100%;
+            padding: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .form.login {
+            transform: translateX(0);
+        }
+
+        .form.signup {
+            transform: translateX(100%);
+        }
+
+        .form.login.slide-out {
+            transform: translateX(-100%);
+        }
+
+        .form.signup.slide-in {
+            transform: translateX(0);
+        }
+
+        .form h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6c757d;
+            font-size: 18px;
+            padding: 0;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-home a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="form-toggle">
+            <button class="toggle-btn active" onclick="showLogin()">Login</button>
+            <button class="toggle-btn" onclick="showSignup()">Sign Up</button>
+        </div>
+
+        <div class="forms-container">
+            <!-- Login Form -->
+            <form class="form login" id="loginForm">
+                <h2>Welcome Back</h2>
+                <div class="success-message" id="loginSuccess">Login successful! Redirecting...</div>
+                
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" required>
+                    <div class="error-message" id="loginEmailError">Please enter a valid email</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">👁️</button>
+                    <div class="error-message" id="loginPasswordError">Password is required</div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="loginBtn">Sign In</button>
+
+                <div class="back-home">
+                    <a href="homepage.html">← Back to Home</a>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="form signup" id="signupForm">
+                <h2>Create Account</h2>
+                <div class="success-message" id="signupSuccess">Account created! Redirecting...</div>
+
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" name="name" required>
+                    <div class="error-message" id="signupNameError">Name is required</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" name="email" required>
+                    <div class="error-message" id="signupEmailError">Please enter a valid email</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="userType">Account Type</label>
+                    <select id="userType" name="userType">
+                        <option value="Student">Student</option>
+                        <option value="Graduate Student">Graduate Student</option>
+                        <option value="Faculty">Faculty</option>
+                        <option value="Staff">Staff</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" name="password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('signupPassword')">👁️</button>
+                    <div class="error-message" id="signupPasswordError">Password must be at least 8 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">👁️</button>
+                    <div class="error-message" id="confirmPasswordError">Passwords don't match</div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="signupBtn">Create Account</button>
+
+                <div class="back-home">
+                    <a href="homepage.html">← Back to Home</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api/auth';
+
+        // Form switching
+        function showLogin() {
+            const loginForm = document.querySelector('.form.login');
+            const signupForm = document.querySelector('.form.signup');
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
+
+            toggleBtns[0].classList.add('active');
+            toggleBtns[1].classList.remove('active');
+
+            loginForm.classList.remove('slide-out');
+            signupForm.classList.remove('slide-in');
+            signupForm.style.transform = 'translateX(100%)';
+            loginForm.style.transform = 'translateX(0)';
+        }
+
+        function showSignup() {
+            const loginForm = document.querySelector('.form.login');
+            const signupForm = document.querySelector('.form.signup');
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
+
+            toggleBtns[1].classList.add('active');
+            toggleBtns[0].classList.remove('active');
+
+            loginForm.classList.add('slide-out');
+            signupForm.classList.add('slide-in');
+            signupForm.style.transform = 'translateX(0)';
+            loginForm.style.transform = 'translateX(-100%)';
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showError(inputId, errorId, message) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            input.classList.add('error');
+            error.textContent = message;
+            error.classList.add('show');
+        }
+
+        function hideError(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            input.classList.remove('error');
+            error.classList.remove('show');
+        }
+
+        function showSuccess(successId) {
+            const success = document.getElementById(successId);
+            success.classList.add('show');
+        }
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (!email || !validateEmail(email)) {
+                showError('loginEmail', 'loginEmailError', 'Please enter a valid email');
+                isValid = false;
+            } else {
+                hideError('loginEmail', 'loginEmailError');
+            }
+
+            if (!password) {
+                showError('loginPassword', 'loginPasswordError', 'Password is required');
+                isValid = false;
+            } else {
+                hideError('loginPassword', 'loginPasswordError');
+            }
+
+            if (isValid) {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<span class="loading"></span>';
+
+                try {
+                    const response = await fetch(`${API_URL}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        
+                        showSuccess('loginSuccess');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'library_profile-page.html';
+                        }, 1000);
+                    } else {
+                        alert(data.message || 'Login failed');
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = 'Sign In';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Cannot connect to server. Please make sure the backend is running.');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Sign In';
+                }
+            }
+        });
+
+        // Signup form
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const userType = document.getElementById('userType').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const signupBtn = document.getElementById('signupBtn');
+
+            if (!name.trim()) {
+                showError('signupName', 'signupNameError', 'Name is required');
+                isValid = false;
+            } else {
+                hideError('signupName', 'signupNameError');
+            }
+
+            if (!email || !validateEmail(email)) {
+                showError('signupEmail', 'signupEmailError', 'Please enter a valid email');
+                isValid = false;
+            } else {
+                hideError('signupEmail', 'signupEmailError');
+            }
+
+            if (!password || password.length < 8) {
+                showError('signupPassword', 'signupPasswordError', 'Password must be at least 8 characters');
+                isValid = false;
+            } else {
+                hideError('signupPassword', 'signupPasswordError');
+            }
+
+            if (password !== confirmPassword) {
+                showError('confirmPassword', 'confirmPasswordError', 'Passwords don\'t match');
+                isValid = false;
+            } else {
+                hideError('confirmPassword', 'confirmPasswordError');
+            }
+
+            if (isValid) {
+                signupBtn.disabled = true;
+                signupBtn.innerHTML = '<span class="loading"></span>';
+
+                try {
+                    const response = await fetch(`${API_URL}/signup`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name, email, password, userType })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        
+                        showSuccess('signupSuccess');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'library_profile-page.html';
+                        }, 1000);
+                    } else {
+                        alert(data.message || 'Signup failed');
+                        signupBtn.disabled = false;
+                        signupBtn.textContent = 'Create Account';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Cannot connect to server. Please make sure the backend is running.');
+                    signupBtn.disabled = false;
+                    signupBtn.textContent = 'Create Account';
+                }
+            }
+        });
+
+        // Check if redirected from signup
+        window.addEventListener('DOMContentLoaded', function() {
+            if (location.hash === '#signup') {
+                showSignup();
+            }
+        });
+    </script>
+</body>
+</html>

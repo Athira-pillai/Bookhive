@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bookhive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #764ba2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Special Login button style */
+         .login-btn {
+          padding: 10px 20px;
+         background: linear-gradient(45deg, #667eea, #764ba2);
+         color: white !important;
+         border-radius: 25px;
+          font-weight: bold;
+           transition: all 0.3s ease;
+          text-decoration: none;
+}
+
+         .login-btn:hover {
+           background: linear-gradient(45deg, #5a67d8, #6b46c1);
+           transform: translateY(-2px);
+           box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+        .nav-links a:hover {
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="books" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse"><rect fill="%23ffffff10" width="20" height="40" x="5" y="10"/><rect fill="%23ffffff08" width="20" height="35" x="25" y="15"/><rect fill="%23ffffff06" width="20" height="30" x="45" y="20"/></pattern></defs><rect fill="url(%23books)" width="100%25" height="100%25"/></svg>') repeat;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Search Section */
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 4rem 0;
+            margin-top: -100px;
+            position: relative;
+            z-index: 10;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .search-container {
+            display: flex;
+            max-width: 800px;
+            margin: 0 auto;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1rem;
+            min-width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 20px rgba(118, 75, 162, 0.2);
+        }
+
+        .search-btn {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(118, 75, 162, 0.3);
+        }
+
+        /* Services Section */
+        .services {
+            background: white;
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        /* Hours Section */
+        .hours {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .hours-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Contact Section */
+        .contact {
+            background: white;
+            padding: 5rem 0;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item-icon {
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Book Detail Page */
+        .book-detail-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            overflow-y: auto;
+        }
+
+        .book-detail-content {
+            max-width: 800px;
+            margin: 5rem auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .book-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .book-info {
+            padding: 3rem;
+        }
+
+        .book-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-author {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .meta-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .meta-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-value {
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .book-description {
+            line-height: 1.8;
+            color: #666;
+            margin: 2rem 0;
+        }
+
+        .download-section {
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .download-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .search-result-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-result-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .search-result-item.unavailable {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .click-hint {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: auto;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .book-detail-content {
+                margin: 2rem 1rem;
+            }
+
+            .book-header,
+            .book-info {
+                padding: 2rem;
+            }
+
+            .book-title {
+                font-size: 2rem;
+            }
+
+            .book-meta {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Book Animation */
+        .floating-books {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-book {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.1);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+        /* Chatbot */
+.chatbot-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    transition: transform 0.3s;
+    z-index: 1000;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1);
+}
+
+.chatbot-container {
+    position: fixed;
+    bottom: 100px;
+    right: 2rem;
+    width: 380px;
+    height: 550px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    display: none;
+    flex-direction: column;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    z-index: 999;
+    overflow: hidden;
+}
+
+.chatbot-container.active {
+    display: flex;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chatbot-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.close-chat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.message {
+    max-width: 80%;
+    padding: 0.8rem 1rem;
+    border-radius: 15px;
+    animation: messageSlide 0.3s ease-out;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.bot {
+    background: rgba(102, 126, 234, 0.2);
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+}
+
+.message.user {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+    color: white;
+}
+
+.chatbot-input {
+    padding: 1rem;
+    border-top: 1px solid rgba(102, 126, 234, 0.2);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chatbot-input input {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.chatbot-input input:focus {
+    outline: none;
+    border-color: #764ba2;
+}
+
+.chatbot-input button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 5px;
+    padding: 0.8rem 1rem;
+    background: rgba(102, 126, 234, 0.2);
+    border-radius: 15px;
+    width: fit-content;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #667eea;
+    animation: typing 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-10px);
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">📚 Bookhive</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#hours">Hours</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="login.html"
+                    class="login-btn">Login/Signup</a></li>
+                    <li><a href="library_profile-page.html" class="login-btn">👤 </a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="floating-books"></div>
+        <div class="hero-content">
+            <h1>Welcome to Bookhive</h1>
+            <p>Discover knowledge, explore ideas, and connect with learning</p>
+            <a href="#services" class="cta-button">Explore Resources</a>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search books, journals, databases...">
+                <button class="search-btn" onclick="performSearch()">Search</button>
+            </div>
+            <div id="searchResults" style="margin-top: 2rem; display: none;">
+                <h3>Search Results:</h3>
+                <div id="resultsContainer"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <span class="service-icon">📖</span>
+                    <h3>Book Collection</h3>
+                    <p>Access our extensive collection of books, journals, and digital resources across all academic disciplines.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">💻</span>
+                    <h3>Digital Resources</h3>
+                    <p>Online databases, e-books, digital archives, and research tools available 24/7.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">📚</span>
+                    <h3>Study Spaces</h3>
+                    <p>Quiet study areas, group study rooms, and collaborative workspaces for all your academic needs.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">👨‍🏫</span>
+                    <h3>Research Help</h3>
+                    <p>Expert librarians available to assist with research, citations, and academic support.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">🎓</span>
+                    <h3>Academic Support</h3>
+                    <p>Workshops, tutorials, and one-on-one sessions to enhance your research skills.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">📱</span>
+                    <h3>Technology</h3>
+                    <p>Computer labs, printing services, Wi-Fi access, and device lending programs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hours Section -->
+    <section id="hours" class="hours">
+        <div class="container">
+            <h2 class="section-title">Library Hours</h2>
+            <div class="hours-grid">
+                <div class="hours-card">
+                    <h3>Main Library</h3>
+                    <p>Monday - Thursday: 9:00 AM - 4:00 PM</p>
+                    <p>Friday: 9:00 AM - 4:00 PM</p>
+                    <p>Saturday: 9:00 AM - 4:00 PM</p>
+                    <p>Sunday:---------</p>
+                </div>
+                <div class="hours-card">
+                    <h3>Reference Desk</h3>
+                    <p>Monday - Thursday: 9:00 AM - 4:00 PM</p>
+                    <p>Friday: 9:00 AM - 4:00 PM</p>
+                    <p>Saturday: 9:00 AM - 4:00 PM</p>
+                    <p>Sunday: ----------</p>
+                </div>
+                <div class="hours-card">
+                    <h3>Computer Lab</h3>
+                    <p>Monday - Friday: 9:00 AM - 4:00 PM</p>
+                    <p>Saturday: 9:00 AM - 4:00 PM</p>
+                    <p>Sunday: --------------</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-grid">
+                <form class="contact-form" onsubmit="submitForm(event)">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="cta-button">Send Message</button>
+                </form>
+                
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">📍</div>
+                        <div>
+                            <strong>Address</strong><br>
+                            123 hennur-baglur Ave<br>
+                             Banglore - 560043
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">📞</div>
+                        <div>
+                            <strong>Phone</strong><br>
+                            (555) 123-4567
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">✉️</div>
+                        <div>
+                            <strong>Email</strong><br>
+                            bookhive13@gmail.com
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">🕒</div>
+                        <div>
+                            <strong>Help Desk</strong><br>
+                            Available during library hours
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Bookhive Library. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Book Detail Modal -->
+    <div id="bookDetailPage" class="book-detail-page">
+        <div class="book-detail-content">
+            <div class="book-header">
+                <button class="close-btn" onclick="closeBookDetail()">&times;</button>
+                <h1 class="book-title" id="detailTitle"></h1>
+                <p class="book-author" id="detailAuthor"></p>
+            </div>
+            
+            <div class="book-info">
+                <div class="book-meta" id="bookMeta">
+                    <!-- Meta information will be populated here -->
+                </div>
+                
+                <div class="book-description" id="bookDescription">
+                    <!-- Description will be populated here -->
+                </div>
+            </div>
+            
+            <div class="download-section">
+                <h3>📚 Ready to Read?</h3>
+                <p>Click the button below to download this book and start reading!</p>
+                <a href="#" id="downloadLink" class="download-btn">
+                    ⬇️ Download Book
+                </a>
+                <div id="downloadNote" style="margin-top:0.6rem; color: rgba(255,255,255,0.95); font-size:0.95rem;"></div>
+            </div>
+        </div>
+    </div>
+     <!-- Chatbot -->
+<button class="chatbot-toggle" id="chatToggle">💬</button>
+
+<div class="chatbot-container" id="chatContainer">
+    <div class="chatbot-header">
+        <h3>Library Assistant</h3>
+        <button class="close-chat" id="closeChat">×</button>
+    </div>
+    <div class="chatbot-messages" id="chatMessages">
+        <div class="message bot">
+            Hello! I'm your library assistant. How can I help you today?
+        </div>
+    </div>
+    <div class="chatbot-input">
+        <input type="text" id="chatInput" placeholder="Type your message...">
+        <button id="sendMessage">Send</button>
+    </div>
+</div>
+
+    <script>
+        // Sample book data
+        const bookDatabase = [
+            { 
+                id: 1,
+                title: "Introduction to Psychology", 
+                author: "David Myers", 
+                category: "Psychology", 
+                available: false,
+                isbn: "978-1319013059",
+                pages: 832,
+                year: 2019,
+                description: "A comprehensive introduction to psychological science covering research methods, biological bases of behavior, sensation and perception, learning, memory, thinking, and more.",
+                downloadUrl: null,
+            },
+            { 
+                id: 2,
+                title: "Calculus: Early Transcendentals", 
+                author: "James Stewart", 
+                category: "Mathematics", 
+                available: false,
+                isbn: "978-1285741550",
+                pages: 1344,
+                year: 2015,
+                description: "Essential calculus concepts with clear explanations, comprehensive exercises, and real-world applications in engineering and science.",
+                downloadUrl: null,
+            },
+            { 
+                id: 3,
+                title: "The Great Gatsby", 
+                author: "F. Scott Fitzgerald", 
+                category: "Literature", 
+                available: false,
+                isbn: "978-0743273565",
+                pages: 180,
+                year: 1925,
+                description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, idealism, and moral decay.",
+                downloadUrl: null,
+            },
+            { 
+                id: 4,
+                title: "A Brief History of Time", 
+                author: "Stephen Hawking", 
+                category: "Physics", 
+                available: false,
+                isbn: "978-0553380163",
+                pages: 212,
+                year: 1988,
+                description: "An accessible exploration of cosmology, black holes, time travel, and the nature of the universe by renowned physicist Stephen Hawking.",
+                downloadUrl: null,
+            },
+            { 
+                id: 5,
+                title: "Principles of Economics", 
+                author: "Gregory Mankiw", 
+                category: "Economics", 
+                available: true,
+                isbn: "978-1305585126",
+                pages: 888,
+                year: 2017,
+                description: "Fundamental economic principles explained with real-world examples, covering microeconomics, macroeconomics, and current economic issues.",
+                downloadUrl: "https://drive.google.com/uc?export=download&id=1o7Ujha3TiHm0a6bdvUKz4_47ZQ_Jl4kx",
+            },
+            { 
+                id: 6,
+                title: "Computer Science Illuminated", 
+                author: "Nell Dale", 
+                category: "Computer Science", 
+                available: true,
+                isbn: "978-1284155617",
+                pages: 672,
+                year: 2019,
+                description: "An engaging introduction to computer science covering algorithms, programming languages, computer architecture, networks, and more.",
+                downloadUrl: "https://drive.google.com/uc?export=download&id=18-7QzWgBvi3Sy0R4l6r0IJFdfS1QEcyk",
+            },
+            { 
+                id: 7,
+                title: "Biology: The Unity of Life", 
+                author: "Cecie Starr", 
+                category: "Biology", 
+                available: false,
+                isbn: "978-1305073951",
+                pages: 768,
+                year: 2015,
+                description: "Comprehensive biology textbook covering cell biology, genetics, evolution, ecology, and human biology with stunning visuals.",
+                downloadUrl: null,
+            },
+            { 
+                id: 8,
+                title: "World History", 
+                author: "William Duiker", 
+                category: "History", 
+                available: true,
+                isbn: "978-1305091221",
+                pages: 1056,
+                year: 2018,
+                description: "A comprehensive survey of world history from ancient civilizations to the modern era, with emphasis on cultural, social, and political developments.",
+                downloadUrl: null,
+            }
+        ];
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // Search functionality
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const resultsDiv = document.getElementById('searchResults');
+            const container = document.getElementById('resultsContainer');
+            
+            if (!query) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            const results = bookDatabase.filter(book => 
+                book.title.toLowerCase().includes(query) ||
+                book.author.toLowerCase().includes(query) ||
+                book.category.toLowerCase().includes(query)
+            );
+
+            container.innerHTML = '';
+            
+            if (results.length === 0) {
+                container.innerHTML = '<p>No results found. Try a different search term.</p>';
+            } else {
+                results.forEach(book => {
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = `search-result-item ${!book.available ? 'unavailable' : ''}`;
+                    resultDiv.style.cssText = `
+                        background: white;
+                        padding: 1.5rem;
+                        margin: 0.5rem 0;
+                        border-radius: 12px;
+                        border-left: 4px solid ${book.available ? '#4CAF50' : '#f44336'};
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        position: relative;
+                    `;
+                    
+                    resultDiv.innerHTML = `
+                        <strong style="font-size: 1.2rem; color: #333;">${book.title}</strong><br>
+                        <em style="color: #666;">by ${book.author}</em><br>
+                        <small style="color: #888;">Category: ${book.category} | ${book.year}</small><br>
+                        <span style="color: ${book.available ? '#4CAF50' : '#f44336'}; font-weight: bold; margin-top: 0.5rem; display: inline-block;">
+                            ${book.available ? '✓ Available for Download' : '✗ Currently Unavailable'}
+                        </span>
+                        ${book.available ? '<div class="click-hint">Click to view details and download</div>' : ''}
+                    `;
+                    
+                    // Add click event for available books
+                    if (book.available) {
+                        resultDiv.addEventListener('click', () => showBookDetail(book));
+                    }
+                    
+                    container.appendChild(resultDiv);
+                });
+            }
+            
+            resultsDiv.style.display = 'block';
+        }
+
+        // Show book detail page
+        function showBookDetail(book) {
+            document.getElementById('detailTitle').textContent = book.title;
+            document.getElementById('detailAuthor').textContent = `by ${book.author}`;
+            
+            // Populate meta information
+            const metaContainer = document.getElementById('bookMeta');
+            metaContainer.innerHTML = `
+                <div class="meta-item">
+                    <div class="meta-label">ISBN</div>
+                    <div class="meta-value">${book.isbn}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Pages</div>
+                    <div class="meta-value">${book.pages}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">${book.year}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Category</div>
+                    <div class="meta-value">${book.category}</div>
+                </div>
+            `;
+            
+            // Populate description
+            document.getElementById('bookDescription').textContent = book.description;
+            
+            // Set download link
+            const downloadLink = document.getElementById('downloadLink');
+            const noteEl = document.getElementById('downloadNote');
+            // Clear previous handlers/attributes
+            downloadLink.removeAttribute('target');
+            downloadLink.removeAttribute('rel');
+            downloadLink.removeAttribute('download');
+            downloadLink.onclick = null;
+
+            if (book.downloadUrl && book.downloadUrl !== '#') {
+                downloadLink.href = book.downloadUrl;
+
+                // Show a short note about external links
+                if (book.downloadUrl.includes('drive.google.com')) {
+                    noteEl.textContent = 'This link is on Google Drive — clicking will attempt to start the download. You may need to sign in or request access.';
+                } else {
+                    noteEl.textContent = 'This link opens an external site — clicking will attempt to download the file. If it fails, use the fallback that opens the link in a new tab.';
+                }
+
+                // Install a click handler that first tries an in-page download (hidden iframe)
+                downloadLink.onclick = function(e) {
+                    // Prevent normal navigation so we can attempt a direct download
+                    e.preventDefault();
+                    const url = book.downloadUrl;
+                    noteEl.textContent = 'Starting download...';
+
+                    // Helper: attempt download using a hidden iframe, fallback to opening new tab
+                    try {
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = url;
+                        document.body.appendChild(iframe);
+
+                        // Fallback: if nothing happens in 2.5s, open in a new tab so user can complete sign-in
+                        const fallback = setTimeout(() => {
+                            window.open(url, '_blank');
+                            noteEl.textContent = 'Opened the file in a new tab as a fallback. If it still fails, the file may require access or sign-in.';
+                            // clean up iframe after fallback
+                            try { iframe.remove(); } catch (ex) {}
+                        }, 2500);
+
+                        iframe.onload = function() {
+                            clearTimeout(fallback);
+                            // Some providers will trigger the browser download immediately.
+                            noteEl.textContent = 'If the download did not start automatically, a new tab will open as a fallback.';
+                            setTimeout(() => { try { iframe.remove(); } catch (ex) {} }, 3000);
+                        };
+                    } catch (err) {
+                        // If iframe creation/navigation is blocked, just open in new tab
+                        window.open(url, '_blank');
+                        noteEl.textContent = 'Opened in a new tab. If you see a sign-in or permission prompt, follow the provider instructions.';
+                    }
+                };
+            } else {
+                // Built-in demo: keep simulateDownload behavior
+                noteEl.textContent = '';
+                downloadLink.href = '#';
+                downloadLink.onclick = function(e) {
+                    e.preventDefault();
+                    simulateDownload(book.title);
+                };
+            }
+            
+            // Show the modal
+            document.getElementById('bookDetailPage').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        // Close book detail page
+        function closeBookDetail() {
+            document.getElementById('bookDetailPage').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Simulate book download
+        function simulateDownload(bookTitle) {
+            // Create a loading effect
+            const downloadBtn = document.getElementById('downloadLink');
+            const originalText = downloadBtn.innerHTML;
+            
+            downloadBtn.innerHTML = '⏳ Preparing Download...';
+            downloadBtn.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                // Create a mock PDF file for demonstration
+                const element = document.createElement('a');
+                const text = `This would be the content of "${bookTitle}"\n\nThis is a demo download. In a real implementation, this would be the actual book file.`;
+                const file = new Blob([text], { type: 'text/plain' });
+                element.href = URL.createObjectURL(file);
+                element.download = `${bookTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+                
+                // Show success message
+                downloadBtn.innerHTML = '✅ Downloaded!';
+                
+                setTimeout(() => {
+                    downloadBtn.innerHTML = originalText;
+                    downloadBtn.style.pointerEvents = 'auto';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Initialize event listeners when DOM is loaded
+        function initializeEventListeners() {
+            // Search on Enter key
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+
+            // Close modal when clicking outside
+            const bookDetailPage = document.getElementById('bookDetailPage');
+            if (bookDetailPage) {
+                bookDetailPage.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeBookDetail();
+                    }
+                });
+            }
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('bookDetailPage');
+                    if (modal && modal.style.display === 'block') {
+                        closeBookDetail();
+                    }
+                }
+            });
+        }
+
+        // Form submission
+        function submitForm(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            // Simulate form submission
+            alert(`Thank you, ${data.name}! Your message has been sent. We'll get back to you soon.`);
+            event.target.reset();
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                
+                // Close mobile menu if open
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Create floating books animation
+        function createFloatingBooks() {
+            const container = document.querySelector('.floating-books');
+            const bookEmojis = ['📖', '📚', '📕', '📗', '📘', '📙', '📓', '📔'];
+            
+            setInterval(() => {
+                if (document.querySelectorAll('.floating-book').length < 6) {
+                    const book = document.createElement('div');
+                    book.className = 'floating-book';
+                    book.textContent = bookEmojis[Math.floor(Math.random() * bookEmojis.length)];
+                    book.style.left = Math.random() * 100 + '%';
+                    book.style.animationDuration = (15 + Math.random() * 10) + 's';
+                    book.style.animationDelay = Math.random() * 2 + 's';
+                    
+                    container.appendChild(book);
+                    
+                    // Remove book after animation
+                    setTimeout(() => {
+                        if (book.parentNode) {
+                            book.parentNode.removeChild(book);
+                        }
+                    }, 25000);
+                }
+            }, 3000);
+        }
+
+        // Initialize floating books
+        createFloatingBooks();
+
+        // Header background on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+        window.addEventListener('DOMContentLoaded', function() {
+            if (location.hash === '#signup') {
+                showSignup();
+            }
+        });
+         // Chatbot functionality
+const chatToggle = document.getElementById('chatToggle');
+const chatContainer = document.getElementById('chatContainer');
+const closeChat = document.getElementById('closeChat');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const sendMessage = document.getElementById('sendMessage');
+
+chatToggle.addEventListener('click', () => {
+    chatContainer.classList.add('active');
+});
+
+closeChat.addEventListener('click', () => {
+    chatContainer.classList.remove('active');
+});
+
+const responses = {
+    'hours': 'Our library is open Monday-Friday 8AM-10PM, Saturday 9AM-8PM, and Sunday 10AM-6PM.',
+    'book': 'You can search for books using our catalog above.',
+    'renew': 'To renew books, log into your account or visit the help desk.',
+    'account': 'You can access your library account using your login credentials.',
+    'study': 'Study rooms can be booked online through our reservation system.',
+    'computer': 'Computers are available for student use—first come, first served.',
+    'print': 'Printing costs ₹2 per page (B/W) and ₹5 per color page.',
+    'help': 'I can assist with library hours, renewals, study rooms, and more.',
+    'default': 'I can help you with library hours, book searches, and study spaces. What would you like to know?'
+};
+
+function addMessage(text, isUser = false) {
+    const message = document.createElement('div');
+    message.className = `message ${isUser ? 'user' : 'bot'}`;
+    message.textContent = text;
+    chatMessages.appendChild(message);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTypingIndicator() {
+    const indicator = document.createElement('div');
+    indicator.className = 'typing-indicator';
+    indicator.id = 'typing';
+    indicator.innerHTML = '<span></span><span></span><span></span>';
+    chatMessages.appendChild(indicator);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function removeTypingIndicator() {
+    const indicator = document.getElementById('typing');
+    if (indicator) indicator.remove();
+}
+
+function getBotResponse(userMessage) {
+    const msg = userMessage.toLowerCase();
+    for (const [key, value] of Object.entries(responses)) {
+        if (msg.includes(key)) return value;
+    }
+    return responses.default;
+}
+
+function sendMsg() {
+    const message = chatInput.value.trim();
+    if (message) {
+        addMessage(message, true);
+        chatInput.value = '';
+        showTypingIndicator();
+        setTimeout(() => {
+            removeTypingIndicator();
+            addMessage(getBotResponse(message));
+        }, 1000);
+    }
+}
+
+sendMessage.addEventListener('click', sendMsg);
+chatInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter') sendMsg();
+});
+    </script>
+</body>
+</html>
